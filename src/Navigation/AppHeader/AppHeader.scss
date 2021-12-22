@@ -1,0 +1,8 @@
+@import 'variables.scss';
+
+.app-header {
+    background-color: $background-color;
+    color: white;
+    border: solid 1px $highlight-color;
+    padding: 20px;
+}

@@ -1,0 +1,9 @@
+@import 'variables.scss';
+
+.canvas {
+    width: calc(100% - 200px);
+    border: solid 2px $background-color;
+    border-top: none;
+    border-bottom: none;
+    position: relative;
+}
