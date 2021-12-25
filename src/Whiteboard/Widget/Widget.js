@@ -4,6 +4,7 @@ import { WIDGET_TYPES } from './constants'
 import { useWidgets } from 'Whiteboard/state'
 import Circle from './Circle'
 import Rectangle from './Rectangle'
+import Chart from './Chart'
 
 export default function Widget({ widget }) {
   const isSelectedSelector = useCallback(
@@ -14,9 +15,11 @@ export default function Widget({ widget }) {
   const isSelected = useWidgets(isSelectedSelector)
 
   if (widget.type === WIDGET_TYPES.RECT) {
-      return <Rectangle {...widget} isSelected={ isSelected } />
+    return <Rectangle {...widget} isSelected={ isSelected } />
   } else if (widget.type === WIDGET_TYPES.CIRCLE) {
-      return <Circle {...widget} isSelected={ isSelected } />
+    return <Circle {...widget} isSelected={ isSelected } />
+  } else if (widget.type === WIDGET_TYPES.BAR_CHART) {
+    return <Chart {...widget} isSelected={ isSelected } />
   }
 
   return null

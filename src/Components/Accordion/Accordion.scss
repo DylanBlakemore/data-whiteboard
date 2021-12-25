@@ -1,0 +1,66 @@
+@import 'variables.scss';
+
+.accordion {
+  border: 1px solid $background-color;
+  border-radius: 2px;
+  width: 98%;
+}
+
+.accordion__item + .accordion__item {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.accordion__button {
+  background-color: $background-color;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  width: 100%;
+  text-align: left;
+  border: none;
+}
+
+.accordion__button:hover {
+  background-color: $light-cyan;
+  color: $background-color
+}
+
+.accordion__button:before {
+  display: inline-block;
+  content: '';
+  height: 8px;
+  width: 8px;
+  margin-right: 12px;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+.accordion__button[aria-expanded='true']::before,
+.accordion__button[aria-selected='true']::before {
+  transform: rotate(45deg);
+}
+
+[hidden] {
+  display: none;
+}
+
+.accordion__panel {
+  padding: 10px;
+  animation: fadein 0.35s ease-in;
+  background-color: white;
+}
+
+/* -------------------------------------------------- */
+/* ---------------- Animation part ------------------ */
+/* -------------------------------------------------- */
+
+@keyframes fadein {
+  0% {
+      opacity: 0;
+  }
+
+  100% {
+      opacity: 1;
+  }
+}

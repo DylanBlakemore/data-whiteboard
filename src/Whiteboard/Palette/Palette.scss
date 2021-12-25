@@ -16,3 +16,14 @@
   align-items: center;
   padding: 10px 0;
 }
+
+.section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 10px;
+}
+
+.icon {
+  padding: 5px 5px
+}

@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useCallback } from 'react'
-import { Rect as KonvaRectangle } from 'react-konva'
-
+import embed from 'vega-embed'
 import { showTransformer, scale } from 'Whiteboard/Widget/actions'
 import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/state'
+import DivWidget from 'Whiteboard/Widget/DivWidget'
 import Transformable from 'Whiteboard/Widget/Transformable'
 
 const transform = (node, id, _) => {
@@ -17,9 +17,11 @@ const transform = (node, id, _) => {
   })
 }
 
-export default function Rectangle({ id, isSelected, type, ...widgetProps }) {
+export default function Chart({ type, isSelected, id, ...widgetProps }) {
+
   const widgetRef = useRef()
   const transformerRef = useRef()
+  const vegaRef = useRef(null)
 
   useEffect(() => {
     showTransformer(widgetRef, transformerRef, isSelected)
@@ -38,19 +40,43 @@ export default function Rectangle({ id, isSelected, type, ...widgetProps }) {
     transform(widgetRef.current, id, event)
     }, [id])
 
+  const spec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "A simple bar chart with embedded data.",
+    "data": {
+      "values": [
+        {"a": "A", "b": 28}, {"a": "B", "b": 55}, {"a": "C", "b": 43},
+        {"a": "D", "b": 91}, {"a": "E", "b": 81}, {"a": "F", "b": 53},
+        {"a": "G", "b": 19}, {"a": "H", "b": 87}, {"a": "I", "b": 52}
+      ]
+    },
+    "height": "container",
+    "width": "container",
+    "mark": "bar",
+    "encoding": {
+      "x": {"field": "a", "type": "nominal", "axis": {"labelAngle": 0}},
+      "y": {"field": "b", "type": "quantitative"}
+    }
+  }
+
+  useEffect(() => {
+    embed(vegaRef.current, spec, { renderer: 'svg', actions: false })
+  })
+
   return <Transformable
     transformerRef={ transformerRef }
     isSelected={ isSelected }
   >
-    <KonvaRectangle
+    <DivWidget
+      widgetProps={ widgetProps }
+      widgetRef={ widgetRef }
       onClick={ handleSelect }
       onTap={ handleSelect }
       onDragStart={ handleSelect }
-      ref={ widgetRef }
-      { ...widgetProps }
-      draggable
       onDragEnd={ handleDrag }
       onTransformEnd={ handleTransform }
-    />
+    >
+      <div ref={ vegaRef } style={ { height: widgetProps.height, width: widgetProps.width } }/>
+    </DivWidget>
   </Transformable>
 }
