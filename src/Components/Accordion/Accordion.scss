@@ -1,7 +1,7 @@
 @import 'variables.scss';
 
 .accordion {
-  border: 1px solid $background-color;
+  border: 1px solid $primary-color;
   border-radius: 2px;
   width: 98%;
 }
@@ -11,8 +11,8 @@
 }
 
 .accordion__button {
-  background-color: $background-color;
-  color: white;
+  background-color: $primary-color;
+  color: $secondary-color;
   cursor: pointer;
   padding: 8px;
   width: 100%;
@@ -21,8 +21,8 @@
 }
 
 .accordion__button:hover {
-  background-color: $light-cyan;
-  color: $background-color
+  background-color: $primary-color-light;
+  color: $primary-color
 }
 
 .accordion__button:before {
@@ -48,7 +48,7 @@
 .accordion__panel {
   padding: 10px;
   animation: fadein 0.35s ease-in;
-  background-color: white;
+  background-color: $secondary-color;
 }
 
 /* -------------------------------------------------- */

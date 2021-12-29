@@ -1,17 +1,23 @@
 import './Canvas.scss'
 
 import React, { useRef, useCallback } from 'react'
-import { Layer, Stage } from 'react-konva'
 
-import { useWidgets, clearSelection, } from 'Whiteboard/state'
 import { DRAG_DATA_KEY } from 'Whiteboard/Widget/constants'
-import { createWidget } from 'Whiteboard/Widget/actions'
-import Widget from 'Whiteboard/Widget'
+import createWidget from 'Whiteboard/Widget/createWidget'
+import Stage from './Stage'
 
-const handleDragOver = (event) => event.preventDefault();
+const handleDragOver = (event) => event.preventDefault()
+
+function downloadURI(uri, name) {
+  var link = document.createElement('a')
+  link.download = name
+  link.href = uri
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 
 export default function Canvas() {
-  const widgets = useWidgets((state) => Object.entries(state.widgets))
   const stageRef = useRef()
 
   const handleDrop = useCallback((event) => {
@@ -21,24 +27,23 @@ export default function Canvas() {
       const { type } = JSON.parse(draggedData)
       stageRef.current.setPointersPositions(event)
       const coords = stageRef.current.getPointerPosition()
-      createWidget[type](coords)
+      createWidget({ ...coords, type: type })
     }
   }, [])
 
-  return <main className='canvas' onDrop={ handleDrop } onDragOver={ handleDragOver }>
-    <Stage
-      width={ window.innerWidth - 400 }
-      height={ window.innerHeight }
-      ref={ stageRef }
-      onClick={ clearSelection }
-    >
-      <Layer>
-        {
-          widgets.map(([key, widget]) => (
-            <Widget key={key} widget={{ ...widget, id: key }} />
-          ))
-        }
-      </Layer>
-    </Stage>
+  const handleExport = () => {
+    const uri = stageRef.current.toDataURL()
+    console.log(uri)
+    downloadURI(uri, 'stage.png')
+  }
+
+  return <main
+    className={ `canvas` }
+    onDrop={ handleDrop }
+    onDragOver={ handleDragOver }
+    id='canvas-main'
+  >
+    <button onClick={ handleExport }>Click here to log stage data URL</button>
+    <Stage stageRef={ stageRef }/>
   </main>
 }

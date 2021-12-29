@@ -1,6 +1,7 @@
 import { createStore } from '@halka/state'
 import produce from 'immer'
 import { nanoid } from 'nanoid'
+import { snap } from 'Whiteboard/utils'
 
 const baseState = {
   selected: null,
@@ -13,7 +14,9 @@ const setState = (fn) => useWidgets.set(produce(fn))
 
 export const addWidget = (widget) => {
   setState((state) => {
-    state.widgets[nanoid()] = widget
+    const key = nanoid()
+    state.widgets[key] = widget
+    state.selected = key
   })
 }
 
@@ -29,22 +32,43 @@ export const clearSelection = () => {
   })
 }
 
+export const deleteSelected = () => {
+  setState((state) => {
+    state.widgets[state.selected] = null
+    state.selected = null
+  })
+}
+
 export const moveWidget = (id, event) => {
   setState((state) => {
     const widget = state.widgets[id]
 
     if (widget) {
-      widget.x = event.target.x()
-      widget.y = event.target.y()
+      widget.x = snap(event.target.x())
+      widget.y = snap(event.target.y())
     }
   })
 }
 
 export const updateWidget = (id, widget) => {
   setState((state) => {
+    const { x, y, width, height, widgetProps } = widget
     state.widgets[id] = {
       ...state.widgets[id],
-      ...widget
+      ...widgetProps,
+      x: snap(x),
+      y: snap(y),
+      height: snap(height),
+      width: snap(width)
+    }
+  })
+}
+
+export const updateAttribute = (attr, value) => {
+  setState((state) => {
+    const widget = state.widgets[state.selected]
+    if (widget) {
+      widget[attr] = value
     }
   })
 }

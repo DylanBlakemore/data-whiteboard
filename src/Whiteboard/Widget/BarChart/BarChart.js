@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useCallback } from 'react'
 import embed from 'vega-embed'
-import { showTransformer, scale } from 'Whiteboard/Widget/actions'
-import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/state'
+import { scale, showTransformer } from 'Whiteboard/utils'
+import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/widgetState'
 import DivWidget from 'Whiteboard/Widget/DivWidget'
 import Transformable from 'Whiteboard/Widget/Transformable'
 
@@ -17,7 +17,7 @@ const transform = (node, id, _) => {
   })
 }
 
-export default function Chart({ type, isSelected, id, ...widgetProps }) {
+export default function BarChart({ type, isSelected, id, ...widgetProps }) {
 
   const widgetRef = useRef()
   const transformerRef = useRef()
@@ -41,21 +41,22 @@ export default function Chart({ type, isSelected, id, ...widgetProps }) {
     }, [id])
 
   const spec = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "description": "A simple bar chart with embedded data.",
-    "data": {
-      "values": [
-        {"a": "A", "b": 28}, {"a": "B", "b": 55}, {"a": "C", "b": 43},
-        {"a": "D", "b": 91}, {"a": "E", "b": 81}, {"a": "F", "b": 53},
-        {"a": "G", "b": 19}, {"a": "H", "b": 87}, {"a": "I", "b": 52}
+    '$schema': 'https://vega.github.io/schema/vega-lite/v5.json',
+    'description': 'A simple bar chart with embedded data.',
+    'data': {
+      'values': [
+        {'a': 'A', 'b': 28}, {'a': 'B', 'b': 55}, {'a': 'C', 'b': 43},
+        {'a': 'D', 'b': 91}, {'a': 'E', 'b': 81}, {'a': 'F', 'b': 53},
+        {'a': 'G', 'b': 19}, {'a': 'H', 'b': 87}, {'a': 'I', 'b': 52}
       ]
     },
-    "height": "container",
-    "width": "container",
-    "mark": "bar",
-    "encoding": {
-      "x": {"field": "a", "type": "nominal", "axis": {"labelAngle": 0}},
-      "y": {"field": "b", "type": "quantitative"}
+    'height': 'container',
+    'width': 'container',
+    'mark': 'bar',
+    'background': null,
+    'encoding': {
+      'x': {'field': 'a', 'type': 'nominal', 'axis': {'labelAngle': 0}},
+      'y': {'field': 'b', 'type': 'quantitative'}
     }
   }
 
@@ -76,7 +77,10 @@ export default function Chart({ type, isSelected, id, ...widgetProps }) {
       onDragEnd={ handleDrag }
       onTransformEnd={ handleTransform }
     >
-      <div ref={ vegaRef } style={ { height: widgetProps.height, width: widgetProps.width } }/>
+      <div
+        ref={ vegaRef }
+        style={ { height: widgetProps.height-6, width: widgetProps.width-6, padding: '3px' } }
+      />
     </DivWidget>
   </Transformable>
 }

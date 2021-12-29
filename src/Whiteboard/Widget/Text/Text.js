@@ -1,22 +1,23 @@
 import React, { useRef, useEffect, useCallback } from 'react'
-import { Circle as KonvaCircle } from 'react-konva'
+import { Text as KonvaText } from 'react-konva'
 
 import { scale, showTransformer } from 'Whiteboard/utils'
 import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/widgetState'
 import Transformable from 'Whiteboard/Widget/Transformable'
 
 const transform = (node, id, _) => {
-  const { scaleX } = scale(node)
+  const { scaleX, scaleY } = scale(node)
 
   updateWidget(id, {
     x: node.x(),
     y: node.y(),
     rotation: node.rotation(),
-    radius: node.radius() * scaleX
+    width: node.width() * scaleX,
+    height: node.height() * scaleY
   })
 }
 
-export default function Circle({ id, isSelected, type, ...widgetProps }) {
+export default function Text({ id, isSelected, type, ...widgetProps }) {
   const widgetRef = useRef()
   const transformerRef = useRef()
 
@@ -40,14 +41,8 @@ export default function Circle({ id, isSelected, type, ...widgetProps }) {
   return <Transformable
     transformerRef={ transformerRef }
     isSelected={ isSelected }
-    enabledAnchors={[
-      'top-left',
-      'top-right',
-      'bottom-right',
-      'bottom-left',
-    ]}
   >
-    <KonvaCircle
+    <KonvaText
       onClick={ handleSelect }
       onTap={ handleSelect }
       onDragStart={ handleSelect }
@@ -56,6 +51,12 @@ export default function Circle({ id, isSelected, type, ...widgetProps }) {
       draggable
       onDragEnd={ handleDrag }
       onTransformEnd={ handleTransform }
+      text={ "Some text" }
+      fontSize={ 18 }
+      fill={ '#555' }
+      padding={ 20 }
+      align={ 'center' }
+      verticalAlign={ 'middle' }
     />
   </Transformable>
 }

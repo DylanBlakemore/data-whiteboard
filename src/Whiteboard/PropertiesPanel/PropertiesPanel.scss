@@ -2,12 +2,12 @@
   display: flex;
   flex-direction: column;
   padding: 10px;
+  width: 100%;
+  max-width: 200px;
 }
 
 .properties {
   margin-top: 10px;
-}
-
-.no-data {
-  color: darkslategray;
+  align-items: center;
+  padding: 10px 0;
 }

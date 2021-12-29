@@ -6,8 +6,13 @@ import {
   faChartBar
 } from '@fortawesome/free-regular-svg-icons'
 
+import {
+  faFont
+} from '@fortawesome/free-solid-svg-icons'
+
 library.add(
   faSquare,
   faCircle,
-  faChartBar
+  faChartBar,
+  faFont
 )

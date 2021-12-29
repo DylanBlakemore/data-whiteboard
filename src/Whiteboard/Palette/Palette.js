@@ -2,7 +2,7 @@ import './Palette.scss'
 
 import React from 'react'
 
-import { widgetIcons } from './widgetIcons'
+import { widgetTypes } from 'Whiteboard/Widget/widgetTypes'
 import lodash from 'lodash'
 import { DRAG_DATA_KEY } from 'Whiteboard/Widget/constants'
 import { Icon } from './Icon'
@@ -31,17 +31,19 @@ const handleDragStart = (event) => {
 }
 
 export default function Palette() {
-  const widgets = lodash.map(widgetIcons, ({ title, key, widgets }) => {
+  const widgets = lodash.map(widgetTypes, ({ title, key, widgets }) => {
     return {
       title: title,
       key: key,
       body: <div className='section'>
-        {lodash.map(widgets, ({ icon, widget }) => {
+        {lodash.map(widgets, ({ icon, widget, iconStyle }) => {
           return <Icon
             icon={ icon }
             widget={ widget }
             onDragStart={ handleDragStart }
             size={ 'lg' }
+            key={ widget }
+            style={ iconStyle || 'far' }
           />
         })}
       </div>

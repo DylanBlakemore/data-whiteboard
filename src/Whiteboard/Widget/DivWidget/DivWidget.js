@@ -1,5 +1,5 @@
 import React from 'react'
-import { Rect as KonvaRectangle, Group } from "react-konva"
+import { Rect as KonvaRectangle, Group } from 'react-konva'
 import { Html } from 'react-konva-utils'
 
 export default function DivWidget({ children, widgetRef, onClick, onTap, onDragStart, onDragEnd, onTransformEnd, widgetProps }) {
@@ -17,12 +17,11 @@ export default function DivWidget({ children, widgetRef, onClick, onTap, onDragS
     onDragEnd={ onDragEnd }
     onTransformEnd={ onTransformEnd }
   >
-    <Html divProps={{ style: { pointerEvents: "none" } }} >
+    <Html divProps={{ style: { pointerEvents: 'none' } }} >
       { children }
     </Html>
     <KonvaRectangle
       { ...rectProps }
-      stroke={ null }
       height={ height }
       width={ width }
     />

@@ -1,8 +1,10 @@
 @import 'variables.scss';
 
 .canvas {
-    width: calc(100% - 200px);
-    border: solid 2px $background-color;
+    width: calc(100% - 400px);
+    background-color: #F0F0F0;
+    flex-direction: column;
+    border: solid 1px $primary-color;
     border-top: none;
     border-bottom: none;
     position: relative;

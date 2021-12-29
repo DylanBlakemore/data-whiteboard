@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useCallback } from 'react'
 import { Rect as KonvaRectangle } from 'react-konva'
 
-import { showTransformer, scale } from 'Whiteboard/Widget/actions'
-import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/state'
+import { scale, showTransformer } from 'Whiteboard/utils'
+import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/widgetState'
 import Transformable from 'Whiteboard/Widget/Transformable'
 
 const transform = (node, id, _) => {
