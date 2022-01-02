@@ -49,7 +49,7 @@ export default function Stage({ stageRef }) {
     <Layer>
       {
         widgets.map(([key, widget]) => (
-          <Widget key={ key } widget={ { ...widget, id: key } } />
+          <Widget key={ key } widget={ { ...widget, id: key } } stage={ stageRef } />
         ))
       }
     </Layer>

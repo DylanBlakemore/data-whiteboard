@@ -8,6 +8,7 @@ const baseState = {
   widgets: {}
 }
 
+// const widgetStore = createStore(baseState)
 export const useWidgets = createStore(baseState)
 
 const setState = (fn) => useWidgets.set(produce(fn))
@@ -52,10 +53,11 @@ export const moveWidget = (id, event) => {
 
 export const updateWidget = (id, widget) => {
   setState((state) => {
-    const { x, y, width, height, widgetProps } = widget
+    const { x, y, width, height, radius, widgetProps } = widget
     state.widgets[id] = {
       ...state.widgets[id],
       ...widgetProps,
+      radius: snap(radius),
       x: snap(x),
       y: snap(y),
       height: snap(height),

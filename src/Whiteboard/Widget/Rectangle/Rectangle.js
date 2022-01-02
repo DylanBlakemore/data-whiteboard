@@ -1,56 +1,47 @@
-import React, { useRef, useEffect, useCallback } from 'react'
 import { Rect as KonvaRectangle } from 'react-konva'
+import ManipulatedWidget from 'Whiteboard/Widget/ManipulatedWidget'
+import { rectangularPosition } from 'Whiteboard/utils'
 
-import { scale, showTransformer } from 'Whiteboard/utils'
-import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/widgetState'
-import Transformable from 'Whiteboard/Widget/Transformable'
-
-const transform = (node, id, _) => {
-  const { scaleX, scaleY } = scale(node)
-
-  updateWidget(id, {
-    x: node.x(),
-    y: node.y(),
-    rotation: node.rotation(),
-    width: node.width() * scaleX,
-    height: node.height() * scaleY
-  })
+export const rectangleProperties = {
+  name: 'Rectangle',
+  category: 'Shapes',
+  icon: {
+    icon: 'square'
+  },
+  defaults: {
+    stroke: '#ffffff',
+    fill: '#ffffff',
+    width: 150,
+    height: 100,
+    cornerRadius: 10,
+    shadowBlur:  5,
+    shadowOffset: { x: 2, y: 2 },
+    shadowOpacity:  0.5,
+    shadowColor: 'black',
+    position: rectangularPosition
+  },
+  renderFn: Rectangle
 }
 
 export default function Rectangle({ id, isSelected, type, ...widgetProps }) {
-  const widgetRef = useRef()
-  const transformerRef = useRef()
+  const groupProps = (({ x, y, width, height }) => ({ x, y, width, height }))(widgetProps)
+  const { x, y, ...rectProps } = widgetProps
 
-  useEffect(() => {
-    showTransformer(widgetRef, transformerRef, isSelected)
-  }, [isSelected])
+  const transform = (node, scaleX, scaleY) => ({
+    x: node.x(),
+    y: node.y(),
+    width: node.width() * scaleX,
+    height: node.height() * scaleY
+  })
 
-  const handleSelect = useCallback((event) => {
-      event.cancelBubble = true
-      selectWidget(id)
-    }, [id])
-
-  const handleDrag = useCallback((event) => {
-      moveWidget(id, event)
-    }, [id])
-
-  const handleTransform = useCallback((event) => {
-    transform(widgetRef.current, id, event)
-    }, [id])
-
-  return <Transformable
-    transformerRef={ transformerRef }
+  return <ManipulatedWidget
+    groupProps={ groupProps }
+    id={ id }
+    transform={ transform }
     isSelected={ isSelected }
   >
     <KonvaRectangle
-      onClick={ handleSelect }
-      onTap={ handleSelect }
-      onDragStart={ handleSelect }
-      ref={ widgetRef }
-      { ...widgetProps }
-      draggable
-      onDragEnd={ handleDrag }
-      onTransformEnd={ handleTransform }
+      { ...rectProps }
     />
-  </Transformable>
+  </ManipulatedWidget>
 }

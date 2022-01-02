@@ -2,11 +2,11 @@ import './Palette.scss'
 
 import React from 'react'
 
-import { widgetTypes } from 'Whiteboard/Widget/widgetTypes'
 import lodash from 'lodash'
 import { DRAG_DATA_KEY } from 'Whiteboard/Widget/constants'
 import { Icon } from './Icon'
 import Accordion from 'Components/Accordion'
+import WidgetRegistry from 'Whiteboard/Widget/WidgetRegistry'
 
 const handleDragStart = (event) => {
   const type = event.target.dataset.widget
@@ -31,19 +31,20 @@ const handleDragStart = (event) => {
 }
 
 export default function Palette() {
-  const widgets = lodash.map(widgetTypes, ({ title, key, widgets }) => {
+  const registeredWidgets = WidgetRegistry.categories()
+  const widgets = lodash.map(Object.keys(registeredWidgets), (category) => {
     return {
-      title: title,
-      key: key,
+      title: category,
+      key: `${category}-widget-category`,
       body: <div className='section'>
-        {lodash.map(widgets, ({ icon, widget, iconStyle }) => {
+        {lodash.map(registeredWidgets[category], ({ icon, name }) => {
           return <Icon
-            icon={ icon }
-            widget={ widget }
+            icon={ icon.icon }
+            widget={ name }
             onDragStart={ handleDragStart }
             size={ 'lg' }
-            key={ widget }
-            style={ iconStyle || 'far' }
+            key={ name }
+            style={ icon?.style || 'far' }
           />
         })}
       </div>

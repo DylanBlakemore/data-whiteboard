@@ -1,44 +1,35 @@
-import React, { useRef, useEffect, useCallback } from 'react'
-import embed from 'vega-embed'
-import { scale, showTransformer } from 'Whiteboard/utils'
-import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/widgetState'
-import DivWidget from 'Whiteboard/Widget/DivWidget'
-import Transformable from 'Whiteboard/Widget/Transformable'
+import React from 'react'
+import { Rect as KonvaRectangle, Image as KonvaImage } from 'react-konva'
 
-const transform = (node, id, _) => {
-  const { scaleX, scaleY } = scale(node)
+import ManipulatedWidget from 'Whiteboard/Widget/ManipulatedWidget'
+import { useChartImage } from 'Whiteboard/Widget/BarChart/useChartImage'
+import { rectangularPosition } from 'Whiteboard/utils'
 
-  updateWidget(id, {
-    x: node.x(),
-    y: node.y(),
-    rotation: node.rotation(),
-    width: node.width() * scaleX,
-    height: node.height() * scaleY
-  })
+export const barChartProperties = {
+  name: 'Bar chart',
+  category: 'Charts',
+  icon: {
+    icon: 'chart-bar'
+  },
+  defaults: {
+    stroke: '#ffffff',
+    fill: '#ffffff',
+    width: 150,
+    height: 100,
+    cornerRadius: 10,
+    shadowBlur:  5,
+    shadowOffset: { x: 2, y: 2 },
+    shadowOpacity:  0.5,
+    shadowColor: 'black',
+    position: rectangularPosition
+  },
+  renderFn: BarChart
 }
 
 export default function BarChart({ type, isSelected, id, ...widgetProps }) {
-
-  const widgetRef = useRef()
-  const transformerRef = useRef()
-  const vegaRef = useRef(null)
-
-  useEffect(() => {
-    showTransformer(widgetRef, transformerRef, isSelected)
-  }, [isSelected])
-
-  const handleSelect = useCallback((event) => {
-      event.cancelBubble = true
-      selectWidget(id)
-    }, [id])
-
-  const handleDrag = useCallback((event) => {
-      moveWidget(id, event)
-    }, [id])
-
-  const handleTransform = useCallback((event) => {
-    transform(widgetRef.current, id, event)
-    }, [id])
+  const groupProps = (({ x, y, width, height }) => ({ x, y, width, height }))(widgetProps)
+  const { x, y, ...rectProps } = widgetProps
+  const { width, height } = widgetProps
 
   const spec = {
     '$schema': 'https://vega.github.io/schema/vega-lite/v5.json',
@@ -50,8 +41,8 @@ export default function BarChart({ type, isSelected, id, ...widgetProps }) {
         {'a': 'G', 'b': 19}, {'a': 'H', 'b': 87}, {'a': 'I', 'b': 52}
       ]
     },
-    'height': 'container',
-    'width': 'container',
+    'height': height,
+    'width': width,
     'mark': 'bar',
     'background': null,
     'encoding': {
@@ -60,27 +51,30 @@ export default function BarChart({ type, isSelected, id, ...widgetProps }) {
     }
   }
 
-  useEffect(() => {
-    embed(vegaRef.current, spec, { renderer: 'svg', actions: false })
+  const chartImage = useChartImage(spec)
+
+  const transform = (node, scaleX, scaleY) => ({
+    x: node.x(),
+    y: node.y(),
+    width: node.width() * scaleX,
+    height: node.height() * scaleY
   })
 
-  return <Transformable
-    transformerRef={ transformerRef }
+  return <ManipulatedWidget
+    groupProps={ groupProps }
+    id={ id }
+    transform={ transform }
     isSelected={ isSelected }
   >
-    <DivWidget
-      widgetProps={ widgetProps }
-      widgetRef={ widgetRef }
-      onClick={ handleSelect }
-      onTap={ handleSelect }
-      onDragStart={ handleSelect }
-      onDragEnd={ handleDrag }
-      onTransformEnd={ handleTransform }
-    >
-      <div
-        ref={ vegaRef }
-        style={ { height: widgetProps.height-6, width: widgetProps.width-6, padding: '3px' } }
-      />
-    </DivWidget>
-  </Transformable>
+    <KonvaRectangle
+      { ...rectProps }
+      height={ height }
+      width={ width }
+    />
+    <KonvaImage
+      width={ width }
+      height={ height}
+      image={ chartImage }
+    />
+  </ManipulatedWidget>
 }

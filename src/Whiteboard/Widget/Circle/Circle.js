@@ -1,61 +1,57 @@
-import React, { useRef, useEffect, useCallback } from 'react'
 import { Circle as KonvaCircle } from 'react-konva'
+import ManipulatedWidget from 'Whiteboard/Widget/ManipulatedWidget'
+import { circularPosition } from 'Whiteboard/utils'
 
-import { scale, showTransformer } from 'Whiteboard/utils'
-import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/widgetState'
-import Transformable from 'Whiteboard/Widget/Transformable'
-
-const transform = (node, id, _) => {
-  const { scaleX } = scale(node)
-
-  updateWidget(id, {
-    x: node.x(),
-    y: node.y(),
-    rotation: node.rotation(),
-    radius: node.radius() * scaleX
-  })
+export const circleProperties = {
+  name: 'Circle',
+  category: 'Shapes',
+  icon: {
+    icon: 'circle'
+  },
+  defaults: {
+    stroke: '#ffffff',
+    fill: '#ffffff',
+    radius: 50,
+    shadowBlur:  5,
+    shadowOffset: { x: 2, y: 2 },
+    shadowOpacity:  0.5,
+    shadowColor: 'black',
+    position: circularPosition
+  },
+  renderFn: Circle
 }
 
 export default function Circle({ id, isSelected, type, ...widgetProps }) {
-  const widgetRef = useRef()
-  const transformerRef = useRef()
+  const groupProps = (({ x, y, height, width }) => ({ x, y, height, width }))(widgetProps)
+  const { x, y, height, width, ...circleProps } = widgetProps
+  const diameter = widgetProps.radius * 2
 
-  useEffect(() => {
-    showTransformer(widgetRef, transformerRef, isSelected)
-  }, [isSelected])
+  const transform = (node, scaleX, _) => {
+    return {
+      x: node.x(),
+      y: node.y(),
+      radius: node.width() * scaleX / 2
+    }
+  }
 
-  const handleSelect = useCallback((event) => {
-      event.cancelBubble = true
-      selectWidget(id)
-    }, [id])
-
-  const handleDrag = useCallback((event) => {
-      moveWidget(id, event)
-    }, [id])
-
-  const handleTransform = useCallback((event) => {
-    transform(widgetRef.current, id, event)
-    }, [id])
-
-  return <Transformable
-    transformerRef={ transformerRef }
-    isSelected={ isSelected }
-    enabledAnchors={[
+  const transformProps = {
+    enabledAnchors: [
       'top-left',
       'top-right',
       'bottom-right',
-      'bottom-left',
-    ]}
+      'bottom-left'
+    ]
+  }
+
+  return <ManipulatedWidget
+    groupProps={ { ...groupProps, width: diameter, height: diameter } }
+    id={ id }
+    transform={ transform }
+    isSelected={ isSelected }
+    transformerProps={ transformProps }
   >
     <KonvaCircle
-      onClick={ handleSelect }
-      onTap={ handleSelect }
-      onDragStart={ handleSelect }
-      ref={ widgetRef }
-      { ...widgetProps }
-      draggable
-      onDragEnd={ handleDrag }
-      onTransformEnd={ handleTransform }
+      { ...circleProps }
     />
-  </Transformable>
+  </ManipulatedWidget>
 }

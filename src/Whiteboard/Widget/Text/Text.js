@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useCallback } from 'react'
+import React, { useRef, useEffect, useCallback, useState } from 'react'
 import { Text as KonvaText } from 'react-konva'
+import { Html } from 'react-konva-utils'
 
 import { scale, showTransformer } from 'Whiteboard/utils'
 import { selectWidget, moveWidget, updateWidget } from 'Whiteboard/widgetState'
@@ -17,9 +18,29 @@ const transform = (node, id, _) => {
   })
 }
 
+const style = (width, height) => {
+  return {
+    width: `${width}px`,
+    height: `${height}px`,
+    border: "none",
+    padding: "0px",
+    margin: "0px",
+    background: "none",
+    outline: "none",
+    resize: "none",
+    colour: "black",
+    fontSize: "16px",
+    fontFamily: "sans-serif"
+  }
+}
+
+const RETURN_KEY = 13
+const ESCAPE_KEY = 27
+
 export default function Text({ id, isSelected, type, ...widgetProps }) {
   const widgetRef = useRef()
   const transformerRef = useRef()
+  const [isEditing, setEditing] = useState(false)
 
   useEffect(() => {
     showTransformer(widgetRef, transformerRef, isSelected)
@@ -38,25 +59,46 @@ export default function Text({ id, isSelected, type, ...widgetProps }) {
     transform(widgetRef.current, id, event)
     }, [id])
 
-  return <Transformable
-    transformerRef={ transformerRef }
-    isSelected={ isSelected }
-  >
-    <KonvaText
-      onClick={ handleSelect }
-      onTap={ handleSelect }
-      onDragStart={ handleSelect }
-      ref={ widgetRef }
-      { ...widgetProps }
-      draggable
-      onDragEnd={ handleDrag }
-      onTransformEnd={ handleTransform }
-      text={ "Some text" }
-      fontSize={ 18 }
-      fill={ '#555' }
-      padding={ 20 }
-      align={ 'center' }
-      verticalAlign={ 'middle' }
+  const handleEscapeKeys = (event) => {
+    if ((event.keyCode === RETURN_KEY && !event.shiftKey) || event.keyCode === ESCAPE_KEY) {
+      setEditing(false)
+    }
+  }
+
+  const editableInput = <Html groupProps={ {...widgetProps} } divProps={{ style: { opacity: 1 } }}>
+    <textarea
+      onChange={ () => {}}
+      style={ style(widgetProps.width, widgetProps.height) }
+      onKeyDown={ handleEscapeKeys }
     />
-  </Transformable>
+  </Html>
+
+  const startEditing = () => {
+    setEditing(true)
+  }
+
+  return isEditing
+    ? editableInput
+    : <Transformable
+      transformerRef={ transformerRef }
+      isSelected={ isSelected }
+    >
+      <KonvaText
+        onDblClick={ startEditing }
+        onClick={ handleSelect }
+        onTap={ handleSelect }
+        onDragStart={ handleSelect }
+        ref={ widgetRef }
+        { ...widgetProps }
+        draggable
+        onDragEnd={ handleDrag }
+        onTransformEnd={ handleTransform }
+        text={ "Some text" }
+        fontSize={ 18 }
+        fill={ '#555' }
+        padding={ 20 }
+        align={ 'center' }
+        verticalAlign={ 'middle' }
+      />
+    </Transformable>
 }
