@@ -18,6 +18,17 @@ export const propertyTypes = [
     label: 'Shadow color',
     property: 'shadowColor',
     picker: 'color'
+  },
+  {
+    category: 'Text',
+    label: 'Text color',
+    property: 'textColor',
+    picker: 'color'
+  },
+  {
+    category: 'Chart',
+    property: 'spec',
+    picker: 'chart'
   }
 ]
 

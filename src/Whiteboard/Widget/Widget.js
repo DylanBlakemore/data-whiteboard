@@ -1,29 +1,18 @@
-import React, { useCallback } from 'react'
-
-import { WIDGET_TYPES } from './constants'
+import { useCallback } from 'react'
 import { useWidgets } from 'Whiteboard/widgetState'
-import Circle from './Circle'
-import Rectangle from './Rectangle'
-import BarChart from './BarChart'
-import Text from './Text/index.js'
+import WidgetRegistry from 'Whiteboard/Widget/WidgetRegistry'
 
-export default function Widget({ widget, stage }) {
-  const isSelectedSelector = useCallback(
-    (state) => state.selected === widget.id,
+export default function Widget({ widget }) {
+  const isSelectedSelector = useCallback((state) => state.selected === widget.id,
+    [widget]
+  )
+
+  const isEditingSelector = useCallback((state) => state.editing === widget.id,
     [widget]
   )
 
   const isSelected = useWidgets(isSelectedSelector)
+  const isEditing = useWidgets(isEditingSelector)
 
-  if (widget.type === WIDGET_TYPES.RECT) {
-    return <Rectangle {...widget} isSelected={ isSelected }/>
-  } else if (widget.type === WIDGET_TYPES.CIRCLE) {
-    return <Circle {...widget} isSelected={ isSelected }/>
-  } else if (widget.type === WIDGET_TYPES.BAR_CHART) {
-    return <BarChart {...widget} isSelected={ isSelected } stage={ stage }/>
-  } else if (widget.type === WIDGET_TYPES.TEXT) {
-    return <Text  {...widget} isSelected={ isSelected }/>
-  }
-
-  return null
+  return WidgetRegistry.widget({ widget: widget, isSelected: isSelected, isEditing: isEditing })
 }

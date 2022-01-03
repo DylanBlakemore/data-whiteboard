@@ -1,56 +1,82 @@
-import React from "react";
-import { ResizableText } from "./ResizableText";
-import { EditableInput } from "./EditableInput";
+import React from 'react'
 
-const RETURN_KEY = 13;
-const ESCAPE_KEY = 27;
+import { Text as KonvaText } from 'react-konva'
+import { Html } from 'react-konva-utils'
 
-export function EditableText({
+const RETURN_KEY = 13
+const ESCAPE_KEY = 27
+
+function getStyle(width, height) {
+  const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+  const baseStyle = {
+    width: `${width}px`,
+    height: `${height}px`,
+    border: "none",
+    padding: "0px",
+    margin: "0px",
+    background: "none",
+    outline: "none",
+    resize: "none",
+    colour: "black",
+    fontSize: "18px",
+    fontFamily: "sans-serif",
+    textAlign: 'center',
+    verticalAlign: 'central'
+  };
+  if (isFirefox) {
+    return baseStyle;
+  }
+  return {
+    ...baseStyle,
+    margintop: "-4px"
+  };
+}
+
+export default function EditableText({
+  id,
   x,
   y,
   isEditing,
-  isTransforming,
-  onToggleEdit,
-  onToggleTransform,
-  onChange,
-  onResize,
   text,
   width,
-  height
+  height,
+  handleEscape,
+  onTextChange,
+  ...style
 }) {
+
   function handleEscapeKeys(e) {
     if ((e.keyCode === RETURN_KEY && !e.shiftKey) || e.keyCode === ESCAPE_KEY) {
-      onToggleEdit(e);
+      handleEscape()
     }
   }
 
-  function handleTextChange(e) {
-    onChange(e.currentTarget.value);
-  }
+  const { fill, ...textProps } = style
 
   if (isEditing) {
     return (
-      <EditableInput
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        value={text}
-        onChange={handleTextChange}
-        onKeyDown={handleEscapeKeys}
-      />
+      <Html divProps={{ style: { opacity: 1 } }}>
+        <textarea
+          type='text'
+          width={width}
+          height={height}
+          value={text}
+          onChange={ onTextChange }
+          onKeyDown={ handleEscapeKeys }
+          style={ getStyle(width, height) }
+        />
+      </Html>
     );
   }
   return (
-    <ResizableText
-      x={x}
-      y={y}
-      isSelected={isTransforming}
-      onClick={onToggleTransform}
-      onDoubleClick={onToggleEdit}
-      onResize={onResize}
+    <KonvaText
       text={text}
       width={width}
+      height={height}
+      align={ 'center' }
+      verticalAlign={ 'middle' }
+      { ...textProps }
+      fill={ style.textColor }
     />
   );
 }

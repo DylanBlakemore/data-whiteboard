@@ -3,6 +3,8 @@ import { View, parse } from 'vega'
 import { compile } from 'vega-lite'
 import sha256 from 'crypto-js/sha256'
 
+import { makeExtensible } from 'utils'
+
 let imageCache = {}
 
 const generateImage = (svg) => {
@@ -18,10 +20,12 @@ const generateImage = (svg) => {
   return image
 }
 
-export function useChartImage(spec) {
+export function useChartImage(rawSpec) {
   const [svgData, setSvgData] = useState(null)
 
-  const specHash = sha256(JSON.stringify(spec))
+  const specHash = sha256(JSON.stringify(rawSpec))
+
+  const spec = makeExtensible(rawSpec)
 
   if (imageCache[specHash]) return imageCache[specHash]
 

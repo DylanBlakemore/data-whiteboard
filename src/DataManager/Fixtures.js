@@ -1,41 +1,39 @@
 import lodash from 'lodash'
+import data from 'vega-datasets'
 
 const fixturesData = [
   {
     id: 1,
-    data: [
-      {'a': 'A', 'b': 28}, {'a': 'B', 'b': 55}, {'a': 'C', 'b': 43},
-      {'a': 'D', 'b': 91}, {'a': 'E', 'b': 81}, {'a': 'F', 'b': 53},
-      {'a': 'G', 'b': 19}, {'a': 'H', 'b': 87}, {'a': 'I', 'b': 52}
-    ],
+    label: 'Cars',
+    dataKey: 'cars.json',
     fields: [
-      { id: 543, value: 'a', type: 'nominal' },
-      { id: 544, value: 'b', type: 'quantitative' }
+      { id: 543, value: 'Name', type: 'nominal' },
+      { id: 544, value: 'Miles_per_Gallon', type: 'ordinal' },
+      { id: 545, value: 'Cylinders', type: 'ordinal' },
+      { id: 546, value: 'Displacement', type: 'quantitative' },
+      { id: 547, value: 'Horsepower', type: 'quantitative' },
+      { id: 548, value: 'Weight_in_lbs', type: 'quantitative' },
+      { id: 549, value: 'Acceleration', type: 'quantitative' },
+      { id: 550, value: 'Year', type: 'nominal' },
+      { id: 551, value: 'Origin', type: 'nominal' }
     ]
   }
 ]
 
+const indexedFixtures = lodash.keyBy(fixturesData, 'id')
+
 export class Fixtures {
 
-  static filterAttributes(fixture, attributes) {
-    if (attributes) {
-      return null
-    } else {
-      return fixture
-    }
+  static getFixtureList() {
+    return lodash.map(fixturesData, ({ id, label }) => ({ id, label }))
   }
 
-  static all(attributes = null) {
-    return lodash.map(fixturesData, (fixture) => {
-      return Fixtures.filterAttributes(fixture, attributes)
-    })
+  static async getData(id, fn) {
+    await data[indexedFixtures[id].dataKey].then((fixture) => fn(fixture))
   }
 
-  static get({ id, attributes = null }) {
-    return Fixtures.filterAttributes(
-      lodash.find(fixturesData, (fixture) => fixture.id === id),
-      attributes
-    )
+  static getFields(id) {
+    return indexedFixtures[id]?.fields
   }
 
 }

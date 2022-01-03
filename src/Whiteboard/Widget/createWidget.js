@@ -1,9 +1,10 @@
 import { addWidget } from 'Whiteboard/widgetState'
-import { indexedWidgets } from 'Whiteboard/Widget/widgetTypes'
+import WidgetRegistry from 'Whiteboard/Widget/WidgetRegistry'
 
 export default function createWidget({ x, y, type }) {
-  const properties = indexedWidgets[type].properties
-  const position = indexedWidgets[type].position({
+  const widget = WidgetRegistry.indexedWidgets[type]
+  const properties = widget.defaults
+  const position = widget.position({
     x: x,
     y: y,
     width: properties.width,

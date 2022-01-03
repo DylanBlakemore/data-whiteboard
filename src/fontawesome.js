@@ -7,12 +7,16 @@ import {
 } from '@fortawesome/free-regular-svg-icons'
 
 import {
-  faFont
+  faFont,
+  faChartLine,
+  faChartPie
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
   faSquare,
   faCircle,
   faChartBar,
+  faChartLine,
+  faChartPie,
   faFont
 )

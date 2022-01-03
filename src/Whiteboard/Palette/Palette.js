@@ -37,13 +37,13 @@ export default function Palette() {
       title: category,
       key: `${category}-widget-category`,
       body: <div className='section'>
-        {lodash.map(registeredWidgets[category], ({ icon, name }) => {
+        {lodash.map(registeredWidgets[category], ({ icon, type }) => {
           return <Icon
             icon={ icon.icon }
-            widget={ name }
+            widget={ type }
             onDragStart={ handleDragStart }
             size={ 'lg' }
-            key={ name }
+            key={ type }
             style={ icon?.style || 'far' }
           />
         })}

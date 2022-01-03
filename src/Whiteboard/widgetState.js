@@ -5,7 +5,8 @@ import { snap } from 'Whiteboard/utils'
 
 const baseState = {
   selected: null,
-  widgets: {}
+  widgets: {},
+  editing: null
 }
 
 // const widgetStore = createStore(baseState)
@@ -27,10 +28,21 @@ export const selectWidget = (id) => {
   })
 }
 
+export const editWidget = (id) => {
+  setState((state) => {
+    state.editing = id
+  })
+}
+
 export const clearSelection = () => {
   setState((state) => {
     state.selected = null
+    state.editing = null
   })
+}
+
+export const cancelEditing = () => {
+  setState((state) => { state.editing = null })
 }
 
 export const deleteSelected = () => {
