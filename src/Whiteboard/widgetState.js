@@ -9,7 +9,6 @@ const baseState = {
   editing: null
 }
 
-// const widgetStore = createStore(baseState)
 export const useWidgets = createStore(baseState)
 
 const setState = (fn) => useWidgets.set(produce(fn))
@@ -49,6 +48,7 @@ export const deleteSelected = () => {
   setState((state) => {
     state.widgets[state.selected] = null
     state.selected = null
+    state.editing = null
   })
 }
 

@@ -5,6 +5,7 @@ import React, { useRef, useCallback } from 'react'
 import { DRAG_DATA_KEY } from 'Whiteboard/Widget/constants'
 import createWidget from 'Whiteboard/Widget/createWidget'
 import Stage from './Stage'
+import { useStage } from 'Whiteboard/stageState'
 
 const handleDragOver = (event) => event.preventDefault()
 
@@ -19,6 +20,7 @@ function downloadURI(uri, name) {
 
 export default function Canvas() {
   const stageRef = useRef()
+  const stageProps = useStage()
 
   const handleDrop = useCallback((event) => {
     const draggedData = event.nativeEvent.dataTransfer.getData(DRAG_DATA_KEY)
@@ -27,7 +29,7 @@ export default function Canvas() {
       const { type } = JSON.parse(draggedData)
       stageRef.current.setPointersPositions(event)
       const coords = stageRef.current.getPointerPosition()
-      createWidget({ ...coords, type: type })
+      createWidget({ ...coords, type: type, stage: stageProps })
     }
   }, [])
 

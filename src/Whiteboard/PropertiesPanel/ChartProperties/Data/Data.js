@@ -1,20 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import lodash from 'lodash'
 
 import DataManager from 'DataManager'
 import Dropdown from 'Components/Dropdown'
 
-export default function Data({ onChange }) {
+export default function Data({ value, onChange }) {
   const data = lodash.map(DataManager.fixtures.getFixtureList(), ({ id, label }) => ({
     value: id,
     label: label
   }))
 
-  const [value, setValue] = useState(null)
-
   const handleChange = (selectedValue) => {
     onChange(selectedValue)
-    setValue(selectedValue)
   }
 
   return <Dropdown

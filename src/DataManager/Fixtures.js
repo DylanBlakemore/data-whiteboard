@@ -8,7 +8,7 @@ const fixturesData = [
     dataKey: 'cars.json',
     fields: [
       { id: 543, value: 'Name', type: 'nominal' },
-      { id: 544, value: 'Miles_per_Gallon', type: 'ordinal' },
+      { id: 544, value: 'Miles_per_Gallon', type: 'quantitative' },
       { id: 545, value: 'Cylinders', type: 'ordinal' },
       { id: 546, value: 'Displacement', type: 'quantitative' },
       { id: 547, value: 'Horsepower', type: 'quantitative' },
@@ -29,7 +29,8 @@ export class Fixtures {
   }
 
   static async getData(id, fn) {
-    await data[indexedFixtures[id].dataKey].then((fixture) => fn(fixture))
+    const fixture = await data[indexedFixtures[id].dataKey]()
+    fn(fixture)
   }
 
   static getFields(id) {

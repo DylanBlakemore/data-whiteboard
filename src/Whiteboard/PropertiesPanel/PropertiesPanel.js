@@ -42,11 +42,11 @@ export default function PropertiesPanel() {
     />
   }
 
-  const chartPropsSection = selectedWidget && selectedWidget.spec && {
+  const chartPropsSection = selectedWidget && ('spec' in selectedWidget) && {
     title: 'Chart',
     key: 'chart-property-section',
     body: <ChartProperties
-      value={ selectedWidget.spec }
+      selectedWidget={ selectedWidget }
     />
   }
 

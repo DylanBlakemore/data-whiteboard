@@ -1,15 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Layer, Stage as KonvaStage } from 'react-konva'
 import { useWidgets, clearSelection } from 'Whiteboard/widgetState'
 import Widget from 'Whiteboard/Widget'
+import { useStage, updateStage } from 'Whiteboard/stageState'
 
 export default function Stage({ stageRef }) {
   const widgets = useWidgets((state) => Object.entries(state.widgets))
-  const [stage, setStage] = useState({
-    scale: 1,
-    x: 0,
-    y: 0
-  })
+  const stage = useStage()
 
   const handleWheel = (e) => {
     e.evt.preventDefault()
@@ -24,7 +21,7 @@ export default function Stage({ stageRef }) {
 
     const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy
 
-    setStage({
+    updateStage({
       scale: newScale,
       x: (stage.getPointerPosition().x / newScale - mousePointTo.x) * newScale,
       y: (stage.getPointerPosition().y / newScale - mousePointTo.y) * newScale

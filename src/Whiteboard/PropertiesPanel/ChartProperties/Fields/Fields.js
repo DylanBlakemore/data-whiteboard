@@ -9,10 +9,10 @@ const fieldMap = {
   line: ['x', 'y', 'row', 'column', 'color']
 }
 
-export default function Fields({ mark, availableFields }) {
+export default function Fields({ mark, availableFields, onChange, value }) {
   return <>
     {lodash.map(fieldMap[mark] || [], (field) => {
-      return <Field field={ field } options={ availableFields } />
+      return <Field field={ field } value={ value[field] } options={ availableFields } onChange={ onChange } key={ `chart-field-${field}` } />
     })}
   </>
 }

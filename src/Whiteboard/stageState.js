@@ -9,4 +9,12 @@ const baseState = {
 
 export const useStage = createStore(baseState)
 
-const setState = (fn) => useStage.set(produce(fn))
+export const setStage = (fn) => useStage.set(produce(fn))
+
+export const updateStage = ({ scale, x, y }) => {
+  setStage((state) => {
+    state.x = x
+    state.y = y
+    state.scale = scale
+  })
+}

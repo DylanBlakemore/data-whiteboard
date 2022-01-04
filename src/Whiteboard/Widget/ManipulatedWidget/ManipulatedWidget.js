@@ -3,7 +3,7 @@ import { Group } from 'react-konva'
 import Transformable from 'Whiteboard/Widget/Transformable'
 import EditableText from 'Whiteboard/Widget/Text/EditableText'
 import { scale, showTransformer } from 'Whiteboard/utils'
-import { selectWidget, moveWidget, updateWidget, updateAttribute, editWidget, cancelEditing } from 'Whiteboard/widgetState'
+import { selectWidget, moveWidget, updateWidget, updateAttribute, editWidget, cancelEditing, clearSelection } from 'Whiteboard/widgetState'
 import { useKeypress } from 'Hooks'
 import { deleteSelected } from 'Whiteboard/widgetState'
 
@@ -32,6 +32,7 @@ export default function ManipulatedWidget({
 
   const handleSelect = useCallback((event) => {
       event.cancelBubble = true
+      clearSelection()
       selectWidget(id)
   }, [id])
 
@@ -45,7 +46,8 @@ export default function ManipulatedWidget({
     updateWidget(id, transform(widgetRef.current, scaleX, scaleY))
   }, [id, transform])
 
-  const handleDoubleClick = () => {
+  const handleDoubleClick = (event) => {
+    event.cancelBubble = true
     if (hasText && !isEditing) editWidget(id)
   }
 

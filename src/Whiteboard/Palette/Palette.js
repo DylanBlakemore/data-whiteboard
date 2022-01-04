@@ -12,20 +12,7 @@ const handleDragStart = (event) => {
   const type = event.target.dataset.widget
 
   if (type) {
-    const offsetX = event.nativeEvent.offsetX
-    const offsetY = event.nativeEvent.offsetY
-
-    const clientWidth = event.target.clientWidth
-    const clientHeight = event.target.clientHeight
-
-    const dragPayload = JSON.stringify({
-      type,
-      offsetX,
-      offsetY,
-      clientWidth,
-      clientHeight
-    })
-
+    const dragPayload = JSON.stringify({ type })
     event.nativeEvent.dataTransfer.setData(DRAG_DATA_KEY, dragPayload)
   }
 }

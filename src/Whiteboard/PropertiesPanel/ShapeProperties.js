@@ -18,6 +18,7 @@ export default function ShapeProperties({ properties, selectedWidget }) {
           value={ selectedWidget[name] || '' }
           onChange={ updateAttr }
           label={ label }
+          key={ `${name}-shape-property` }
         />
       })
     }
